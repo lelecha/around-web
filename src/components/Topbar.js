@@ -1,13 +1,12 @@
 import React from 'react';
-import logo from './logo.svg';
-import './Topbar.css';
+import logo from '../assets/logo.svg';
+import '../styles/Topbar.css';
 
 export function Topbar() {
-    return(
+    return (
         <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title"> Around</h1>
-
+            <h1 className="App-title">Around</h1>
         </header>
-    )
+    );
 }

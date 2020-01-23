@@ -1,21 +1,11 @@
 import React from 'react';
-import './Register.css';
+import '../styles/Register.css';
 
 import {
     Form,
     Input,
-    Tooltip,
-    Icon,
-    Cascader,
-    Select,
-    Row,
-    Col,
-    Checkbox,
     Button,
-    AutoComplete,
 } from 'antd';
-
-
 
 class RegistrationForm extends React.Component {
     state = {
@@ -67,7 +57,6 @@ class RegistrationForm extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form;
 
-
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -91,15 +80,11 @@ class RegistrationForm extends React.Component {
             },
         };
 
-
-
-
         return (
-            <Form {...formItemLayout} onSubmit={this.handleSubmit} className={"register-form"}>
+            <Form {...formItemLayout} onSubmit={this.handleSubmit} className="register-form">
                 <Form.Item label="Username">
                     {getFieldDecorator('username', {
                         rules: [
-
                             {
                                 required: true,
                                 message: 'Please input your username!',
@@ -144,4 +129,3 @@ class RegistrationForm extends React.Component {
 }
 
 export const Register = Form.create({ name: 'register' })(RegistrationForm);
-
