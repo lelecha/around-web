@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Spin } from 'antd';
+import { Tabs, Spin, Row, Col } from 'antd';
 import { CreatePostButton } from './CreatePostButton';
 import { Gallery } from './Gallery';
 import {
@@ -8,6 +8,8 @@ import {
     TOKEN_KEY,
     API_ROOT,
     AUTH_HEADER,
+    POST_TYPE_IMAGE,
+    POST_TYPE_VIDEO,
 } from '../constants';
 import '../styles/Home.css';
 
@@ -29,9 +31,11 @@ export class Home extends React.Component {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(
                 this.onGeolocationSuccess,
+
                 this.onGeolocationFailure,
                 GEOLOCATION_OPTIONS,
             );
+
         } else {
             this.setState({
                 loadingGeolocation: false,
@@ -51,16 +55,17 @@ export class Home extends React.Component {
         this.loadNearbyPost();
     }
 
+
     onGeolocationFailure = () => {
         this.setState({
             loadingGeolocation: false,
             errormessage: 'Failed to load geolocation.',
         })
     }
-    loadNearbyPost(
+    loadNearbyPost = (
         position = JSON.parse(localStorage.getItem(POSITION_KEY)),
         range = 20000,
-    ) {
+    ) => {
         this.setState({
             loadingPosts: true,
             error: null,
@@ -90,7 +95,7 @@ export class Home extends React.Component {
         });
     }
 
-    getImagePosts() {
+    getPosts(type) {
         if (this.state.error) {
             return <div>{this.state.error}</div>
         } else if(this.state.loadingGeolocation) {
@@ -98,7 +103,20 @@ export class Home extends React.Component {
         } else if (this.state.loadingPosts) {
             return <Spin tip="Loading posts..." />
         } else if (this.state.posts.length > 0) {
-            const images = this.state.posts.map((post) => {
+            if (type === POST_TYPE_IMAGE) {
+                return this.getImagePosts();
+            } else if (type === POST_TYPE_VIDEO) {
+                return this.getVideoPosts();
+            }
+        } else {
+            return 'No nearby posts.';
+        }
+    }
+
+    getImagePosts() {
+        const images = this.state.posts
+            .filter((post) => post.type === POST_TYPE_IMAGE)
+            .map((post) => {
                 return {
                     user: post.user,
                     src: post.url,
@@ -109,24 +127,38 @@ export class Home extends React.Component {
                 }
             });
 
-            return (<Gallery images={images}/>);
-        } else {
-            return 'No nearby posts.';
-        }
+        return (<Gallery images={images}/>);
+    }
+
+    getVideoPosts() {
+        return (
+            <Row gutter={30}>
+                {
+                    this.state.posts
+                        .filter((post) => post.type === POST_TYPE_VIDEO)
+                        .map((post) => (
+                            <Col span={6} key={post.url}>
+                                <video src={post.url} controls={true} className="video-block" />
+                                <div>{`${post.user}: ${post.message}`}</div>
+                            </Col>
+                        ))
+                }
+            </Row>
+        );
     }
 
     componentDidMount() {
         this.getGeolocation();
     }
     render() {
-        const operations = <CreatePostButton />;
+        const operations = <CreatePostButton onSuccess={this.loadNearbyPost} />;
         return (
             <Tabs tabBarExtraContent={operations} className="main-tabs">
                 <TabPane tab="Image Posts" key="1">
-                    {this.getImagePosts()}
+                    {this.getPosts(POST_TYPE_IMAGE)}
                 </TabPane>
-                <TabPane tab="Tab 2" key="2">
-                    Content of tab 2
+                <TabPane tab="Video Posts" key="2">
+                    {this.getPosts(POST_TYPE_VIDEO)}
                 </TabPane>
                 <TabPane tab="Tab 3" key="3">
                     Content of tab 3
