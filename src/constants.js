@@ -1,5 +1,5 @@
-export const API_ROOT = 'https://around-179500.appspot.com';
-// export const API_ROOT = '35.232.51.224';
+// export const API_ROOT = 'https://around-179500.appspot.com';
+export const API_ROOT = 'http://35.232.51.224:8080';
 export const TOKEN_KEY = 'TOKEN';
 export const POSITION_KEY = 'POSITION';
 export const AUTH_HEADER = 'Bearer';
@@ -8,3 +8,4 @@ export const GEOLOCATION_OPTIONS = {
     maximumAge: 3600000,
     timeout: 27000,
 };
+export const POSITION_NOISE = 0.02;
