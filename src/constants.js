@@ -1,4 +1,5 @@
 export const API_ROOT = 'https://around-179500.appspot.com';
+// export const API_ROOT = '35.232.51.224';
 export const TOKEN_KEY = 'TOKEN';
 export const POSITION_KEY = 'POSITION';
 export const AUTH_HEADER = 'Bearer';
